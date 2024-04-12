@@ -1,0 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,100..900;1,100..900&display=swap");
+/* @import "normalize.css"; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import the Regular font */
+@font-face {
+  font-family: "MonumentExtended";
+  src: url("./assets/fonts/MonumentExtended-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Import the Ultrabold font */
+@font-face {
+  font-family: "MonumentExtended";
+  src: url("./assets/fonts/MonumentExtended-Ultrabold.otf") format("opentype");
+  font-weight: 800; /* or any desired weight value */
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: overlay;
+  /* font-family: "Epilogue", sans-serif; */
+}
