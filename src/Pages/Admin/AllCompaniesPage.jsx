@@ -2,8 +2,10 @@ import React, { useState } from "react";
 
 const AllCompaniesPage = () => {
   return (
-    <div className="w-full calcHeight bg-neutral7 flex justify-center">
-      <h1 className="h1">All Companies (0)</h1>
+    <div className="w-full bg-neutral7 flex flex-col items-center pb-3">
+      <div className="maxW">
+        <h1 className="text-[30px] mt-3 font-[500]">All Companies</h1>
+      </div>
     </div>
   );
 };

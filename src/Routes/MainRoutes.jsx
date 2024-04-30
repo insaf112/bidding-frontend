@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import LandingPage from "../Pages/LandingPage";
@@ -16,58 +16,87 @@ import AdminProfilePage from "../Pages/Admin/AdminProfilePage";
 import AllCompaniesPage from "../Pages/Admin/AllCompaniesPage";
 import ApprovalRequests from "../Pages/Admin/ApprovalRequests";
 import ProjectsActiveScreen from "../Pages/Admin/ProjectsActiveScreen";
-import UserProfilePage from "../Pages/User/UserProfilePage";
-import CreateProjectPage from "../Pages/User/CreateProjectPage";
-import FriendRequestPage from "../Pages/User/FriendRequestPage";
+import UserProfilePage from "../Pages/Company/UserProfilePage";
+import CreateProjectPage from "../Pages/Company/CreateProjectPage";
+import FriendRequestPage from "../Pages/Company/FriendRequestPage";
+import CompanyDetailsPage from "../Pages/Admin/CompanyDetailsPage";
+import CompanyDetailsPageUser from "../Pages/Company/CompanyDetailsPageUser";
+import ProjectDetailsPage from "../Pages/Company/ProjectDetailsPage";
+import { getDecodedToken } from "../config/ApiConfig";
+import CompanyDashboardPage from "../Pages/Company/CompanyDashboardPage";
+import { loginSuccess } from "../redux/slices/userSlice";
+import { useDispatch } from "react-redux";
 
 const userType = {
   admin: false,
-  public: false,
-  user: true,
+  public: true,
+  user: false,
 };
 const MainRoutes = () => {
+  const isLoggedIn = getDecodedToken();
+  const dispatch = useDispatch();
+  useMemo(() => {
+    if (isLoggedIn) {
+      dispatch(loginSuccess());
+    }
+  }, []);
   return (
     <>
-      <Header userType={userType} />
+      <Header />
       <Routes>
         <Route path="/" element={<Layout />}>
           {/* Public Routes */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="signup" element={<SignupPage />} />
-          <Route path="admin/login" element={<AdminLoginPage />} />
+
+          {!isLoggedIn && (
+            <>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="login" element={<LoginPage />} />
+              <Route path="signup" element={<SignupPage />} />
+              <Route path="admin/login" element={<AdminLoginPage />} />
+            </>
+          )}
 
           {/* Admin Routes */}
-          <Route element={<AuthRoutes roles={[userType.admin]} />}>
+          <Route element={<AuthRoutes roles={[2]} />}>
             <Route path="admin/dashboard" element={<AdminDashboardPage />} />
             <Route path="admin/admin-profile" element={<AdminProfilePage />} />
             <Route path="admin/companies-list" element={<AllCompaniesPage />} />
+            <Route path="admin/company/:id" element={<CompanyDetailsPage />} />
             <Route
               path="admin/approval-requests"
               element={<ApprovalRequests />}
             />
           </Route>
 
-          {/* User Routes */}
-          <Route element={<AuthRoutes roles={[userType.user]} />}>
-            <Route path="user/user-profile" element={<UserProfilePage />} />
-            <Route path="user/create-project" element={<CreateProjectPage />} />
+          {/* Company Routes */}
+          <Route element={<AuthRoutes roles={[1]} />}>
+            <Route path="company/profile" element={<UserProfilePage />} />
             <Route
-              path="user/friend-requests"
+              path="company/create-project"
+              element={<CreateProjectPage />}
+            />
+
+            <Route
+              path="company/friend-requests"
               element={<FriendRequestPage />}
             />
+            <Route path="company/:id" element={<CompanyDetailsPageUser />} />
+            <Route
+              path="company/dashboard"
+              element={<CompanyDashboardPage />}
+            />
+          </Route>
+
+          {/* User Routes */}
+          <Route element={<AuthRoutes roles={[0]} />}>
             <Route path="user/dashboard" element={<UserDashboardPage />} />
           </Route>
 
           {/* Mutual Routes Admin/User */}
-          <Route
-            element={<AuthRoutes roles={[userType.admin, userType.user]} />}
-          >
+          <Route element={<AuthRoutes roles={[2, 0]} />}>
+            <Route path="project-details" element={<ProjectDetailsPage />} />
             <Route path="active-projects" element={<ProjectsActiveScreen />} />
-            <Route
-              path="user/register-company"
-              element={<RegisterCompanyPage />}
-            />
+            <Route path="register-company" element={<RegisterCompanyPage />} />
           </Route>
           {/* Catch All (Not Found) */}
           <Route path="*" element={<NotFoundPage />} />

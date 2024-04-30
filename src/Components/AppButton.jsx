@@ -1,7 +1,7 @@
 import React from "react";
 
 const AppButton = ({ text, bgColor, color, onClick }) => {
-  const bg = bgColor ? "#4640DE" : "transparent";
+  const bg = bgColor ? bgColor : "transparent";
   const clr = bgColor ? "#fff" : "#4640DE";
   const styles = {
     backgroundColor: bg,

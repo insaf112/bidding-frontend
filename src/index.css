@@ -26,6 +26,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  overflow: overlay;
+
   /* font-family: "Epilogue", sans-serif; */
+}
+body {
+  min-height: 100vh;
+  background-color: #f8f8fd;
 }

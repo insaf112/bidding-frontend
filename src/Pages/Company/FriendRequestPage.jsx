@@ -1,26 +1,31 @@
 import React, { useState } from "react";
 import CompanyDisplayBox from "../../Components/CompanyDisplayBox";
-import { companies, projects } from "../../assets/data/dummyData";
+import { companies } from "../../assets/data/dummyData";
 import { Link, useNavigate } from "react-router-dom";
 import CompanySmallDisplayBox from "../../Components/CompanySmallDisplayBox";
-import ProjectDisplayBox from "../../Components/ProjectDisplayBox";
 
-const ProjectsActiveScreen = () => {
+const FriendRequestPage = () => {
   const navigate = useNavigate();
   return (
     <div className="w-full bg-neutral7 flex flex-col items-center pb-3">
       <div className="maxW">
         <div className="border-b-2 border-b-neutral5 py-3">
           <h1 className="text-[30px] mt-3 font-[500]">
-            Active Projects - {companies.length}
+            Friends Requests - {companies.length}
           </h1>
           <div className="flex flex-wrap mt-4 gap-x-[2%]">
-            {projects.length > 0 ? (
-              projects.map((item) => (
-                <ProjectDisplayBox
+            {companies.length > 0 ? (
+              companies.map((item) => (
+                <CompanySmallDisplayBox
                   key={item.id}
                   item={item}
-                  // onClick={() => navigate(`/user/company/${item.id}`)}
+                  onClick={() => navigate(`/user/company/${item.id}`)}
+                  onAccept={() => {
+                    console.log("ON Accept");
+                  }}
+                  onReject={() => {
+                    console.log("ON Reject");
+                  }}
                 />
               ))
             ) : (
@@ -30,7 +35,7 @@ const ProjectsActiveScreen = () => {
             )}
           </div>
         </div>
-        {/* <div>
+        <div>
           <h1 className="text-[30px] mt-3 font-[500]">Add Companies</h1>
           <div className="flex flex-wrap mt-4 gap-x-[2%]">
             {companies.map((item) => (
@@ -56,10 +61,10 @@ const ProjectsActiveScreen = () => {
               />
             ))}
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );
 };
 
-export default ProjectsActiveScreen;
+export default FriendRequestPage;

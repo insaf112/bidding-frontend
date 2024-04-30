@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 
 import bgImage from "/images/authPageBg.png";
 import AppInput from "../Components/AppInput";
+import { POST } from "../config/ApiConfig";
+import { loginSuccess } from "../redux/slices/userSlice";
+import { useDispatch } from "react-redux";
 
 const LoginPage = () => {
   const [userInput, setUserInput] = useState({
@@ -12,6 +15,7 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onChangeInput = (e) => {
     console.log("User", e.target);
@@ -22,14 +26,24 @@ const LoginPage = () => {
     }));
   };
 
-  const handleLogin = () => {
-    if (!isLoading) {
-      console.log("User", userInput);
+  const handleLogin = async () => {
+    const { email, password } = userInput;
+    if (!isLoading && email && password) {
       setIsLoading(true);
-      setTimeout(() => {
+      try {
+        const {
+          data: { data },
+        } = await POST("/auth/login", { ...userInput });
+        console.log("User Login", data.data.token);
+        localStorage.setItem("token", data.data.token);
+        dispatch(loginSuccess());
         setIsLoading(false);
-        navigate("/");
-      }, 2000);
+        navigate("/user/dashboard");
+      } catch (err) {
+        alert(err);
+      }
+    } else {
+      alert("Please fill all the fields");
     }
   };
   return (

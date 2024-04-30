@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 
 import bgImage from "/images/authPageBg.png";
 import AppInput from "../../Components/AppInput";
+import { userLogin } from "../../config/ApiHelpers";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../redux/slices/userSlice";
 
 const LoginPage = () => {
   const [userInput, setUserInput] = useState({
@@ -12,6 +15,7 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onChangeInput = (e) => {
     console.log("User", e.target);
@@ -22,14 +26,22 @@ const LoginPage = () => {
     }));
   };
 
-  const handleAdminLogin = () => {
-    if (!isLoading) {
-      console.log("User", userInput);
+  const handleAdminLogin = async () => {
+    const { email, password } = userInput;
+    if (!isLoading && email && password) {
       setIsLoading(true);
-      setTimeout(() => {
+      try {
+        const { data } = await userLogin(userInput);
+        console.log("User Login", data.data);
+        localStorage.setItem("token", data.data.data.token);
+        dispatch(loginSuccess());
         setIsLoading(false);
-        navigate("/");
-      }, 2000);
+        navigate("/admin/dashboard");
+      } catch (err) {
+        alert(err);
+      }
+    } else {
+      alert("Please fill all the fields");
     }
   };
   return (

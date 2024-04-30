@@ -94,20 +94,20 @@ const UserMenuToggler = () => {
           horizontal: "center",
         }}
       >
-        <MenuItem onClick={() => handleMenuClick("/user/user-profile")}>
+        <MenuItem onClick={() => handleMenuClick("/company/profile")}>
           <Avatar /> Profile
         </MenuItem>
         <Divider />
         <AppMenuItem
-          onClick={() => handleMenuClick("/user/register-company")}
+          onClick={() => handleMenuClick("/register-company")}
           title={"Register Company"}
         />
         <AppMenuItem
-          onClick={() => handleMenuClick("/user/friend-requests")}
+          onClick={() => handleMenuClick("/company/friend-requests")}
           title={"Friend Requests"}
         />
         <AppMenuItem
-          onClick={() => handleMenuClick("/user/create-project")}
+          onClick={() => handleMenuClick("/company/create-project")}
           title={"Post Project"}
         />
         {/* <AppMenuItem

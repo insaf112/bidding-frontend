@@ -99,7 +99,7 @@ const AdminMenuToggler = () => {
         </MenuItem>
         <Divider />
         <AppMenuItem
-          onClick={() => handleMenuClick("/user/register-company")}
+          onClick={() => handleMenuClick("/register-company")}
           title={"Register Company"}
         />
         <AppMenuItem

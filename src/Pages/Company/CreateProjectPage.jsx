@@ -131,7 +131,7 @@ const CreateProjectPage = () => {
             className={`bg-button mt-4 hover:brightness-125 flex justify-center items-center w-[100%] rounded-md font-epilogue cursor-pointer py-[12px] px-5`}
           >
             <p className={`font-bold text-[white] text-base`}>
-              {isLoading ? "Registering..." : "Register Company"}
+              {isLoading ? "Posting..." : "Post Project"}
             </p>
           </div>
         </div>

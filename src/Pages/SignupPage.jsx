@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import bgImage from "../../public/images/authPageBg.png";
 import AppInput from "../Components/AppInput";
+import { POST } from "../config/ApiConfig";
 
 const SignupPage = () => {
   const [userInput, setUserInput] = useState({
@@ -23,14 +24,23 @@ const SignupPage = () => {
     }));
   };
 
-  const handleSignup = () => {
-    if (!isLoading) {
+  const handleSignup = async () => {
+    const { name, email, password } = userInput;
+    if (!isLoading && name && email && password) {
       console.log("User", userInput);
       setIsLoading(true);
-      setTimeout(() => {
+      try {
+        const res = await POST("/auth/register", { ...userInput });
+        console.log("User", res);
         setIsLoading(false);
-        navigate("/login");
-      }, 2000);
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } catch (err) {
+        alert(err);
+      }
+    } else {
+      alert("Please fill all the fields");
     }
   };
 

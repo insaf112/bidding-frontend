@@ -1,3 +1,12 @@
 .calcHeight {
   height: calc(100vh - 78px);
 }
+::-webkit-scrollbar {
+  width: 4px; /* Width of the scrollbar */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: #4640de; /* Color of the scrollbar handle */
+  border-radius: 4px; /* Rounded corners of the scrollbar handle */
+}

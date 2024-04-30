@@ -35,7 +35,7 @@ const AppInputCompany = ({
     width: label == "Company Name" || label == "Title" ? "100%" : "48.3%",
   };
   return (
-    <div className="grid gap-y-1" style={styles}>
+    <div className="grid gap-y-1 my-auto" style={styles}>
       <p className="text-base font-bold text-neutral2">{showLabel && label}</p>
       <input
         style={{
