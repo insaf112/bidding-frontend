@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-function ConfirmationModal({ data, handleClose, open, onConfirm }) {
+function ConfirmationModal({ data, handleClose, open, onConfirm, variant }) {
   return (
     <>
       <Dialog
@@ -28,7 +28,12 @@ function ConfirmationModal({ data, handleClose, open, onConfirm }) {
           <Button variant="outlined" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="contained" onClick={onConfirm} autoFocus>
+          <Button
+            variant="contained"
+            color={variant}
+            onClick={onConfirm}
+            autoFocus
+          >
             Confirm
           </Button>
         </DialogActions>

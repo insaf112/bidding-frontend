@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 
 const CompanyDetailsPage = () => {
   const { user } = useSelector((state) => state.user);
-  const [company, setCompany] = useState(companies[0]);
+  const [company, setCompany] = useState(null);
   const [pdfFile, setPdfFile] = useState(null);
   const [openPdfModal, setOpenPdfModal] = useState(false);
   const [openConfModal, setOpenConfModal] = useState(false);
@@ -88,9 +88,18 @@ const CompanyDetailsPage = () => {
     <div className="w-full calcHeight bg-neutral7 flex justify-center">
       <div className="maxW py-3">
         <div className="">
-          <p className="text-3xl font-medium">{company.companyName}</p>
-          <p className="text-base mt-3 text-neutral2">{company.description}</p>
+          <p className="text-3xl font-medium">{company?.companyName}</p>
+          <p className="text-base mt-3 text-neutral2">{company?.description}</p>
         </div>
+        <div className="mt-4">
+          <p className="text-xl font-medium">Categories</p>
+          <div className="flex mt-2">
+            <p className="text-base text-neutral2">
+              {company?.categories?.slice(" ").join(", ")}
+            </p>
+          </div>
+        </div>
+        {/* </div> */}
         <div className="mt-4">
           <p className="text-xl font-medium">Documentation</p>
           <div className="flex mt-2 gap-x-5 items-center">
@@ -122,31 +131,31 @@ const CompanyDetailsPage = () => {
             <p className="text-base">
               Phone #1 :{" "}
               <span className="text-primary hover:underline">
-                {company.telephone1}
+                {company?.telephone1}
               </span>
             </p>
             <p className="text-base">
               Phone #2 :{" "}
               <span className="text-primary hover:underline">
-                {company.telephone2}
+                {company?.telephone2}
               </span>
             </p>
             <p className="text-base">
               Fax Number :{" "}
               <span className="text-primary hover:underline">
-                {company.telephone2}
+                {company?.telephone2}
               </span>
             </p>
             <p className="text-base">
               Email :{" "}
               <span className="text-primary hover:underline">
-                {company.emailAddress}
+                {company?.emailAddress}
               </span>
             </p>
             <p className="text-base">
               Website :{" "}
               <span className="text-primary hover:underline">
-                {company.websiteAddress}
+                {company?.websiteAddress}
               </span>
             </p>
           </div>
@@ -157,33 +166,43 @@ const CompanyDetailsPage = () => {
             <p className="text-base">
               Address #1 :{" "}
               <span className="text-primary hover:underline">
-                {company.address1}
+                {company?.address1}
               </span>
             </p>
             <p className="text-base">
               Address #2 :{" "}
               <span className="text-primary hover:underline">
-                {company.address2}
+                {company?.address2}
               </span>
             </p>
             <p className="text-base">
               Address #3 :{" "}
               <span className="text-primary hover:underline">
-                {company.address3}
+                {company?.address3}
               </span>
             </p>
             <p className="text-base">
               Location :{" "}
               <span className="text-primary hover:underline">
-                {company.location}
+                {company?.location}
               </span>
             </p>
           </div>
         </div>
-        <div className="flex gap-x-5 justify-end mt-5">
-          <AppButton onClick={declineClick} bgColor={"red"} text={"Decline"} />
-          <AppButton onClick={acceptClick} bgColor={"green"} text={"Approve"} />
-        </div>
+        {company?.status == 0 && (
+          <div className="flex gap-x-5 justify-end mt-5">
+            <AppButton
+              onClick={declineClick}
+              bgColor={"red"}
+              text={"Decline"}
+            />
+            <AppButton
+              onClick={acceptClick}
+              bgColor={"green"}
+              text={"Approve"}
+            />
+          </div>
+        )}
         <ConfirmationModal
           open={openConfModal}
           onConfirm={

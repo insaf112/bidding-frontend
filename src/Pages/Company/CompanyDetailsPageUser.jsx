@@ -1,14 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
-import categories from "../../assets/data/categories";
-import { companies } from "../../assets/data/dummyData";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import PdfComponent from "../../Components/PdfComponent";
-import PdfFile from "../../assets/Resume.pdf";
 import AppButton from "../../Components/AppButton";
 import ConfirmationModal from "../../Components/ConfirmationModal";
+import { getCompany } from "../../config/ApiHelpers";
+import { POST } from "../../config/ApiConfig";
 
 const CompanyDetailsPageUser = () => {
-  const [company, setCompany] = useState(companies[0]);
+  // const { user } = useSelector((state) => state.user);
+  const [company, setCompany] = useState(null);
+  const [pdfFile, setPdfFile] = useState(null);
   const [openPdfModal, setOpenPdfModal] = useState(false);
   const [openConfModal, setOpenConfModal] = useState(false);
   const [confirmationData, setConfirmationData] = useState({
@@ -18,15 +19,23 @@ const CompanyDetailsPageUser = () => {
   });
 
   const { id } = useParams();
-
+  const navigate = useNavigate();
   const { state } = useLocation();
   console.log("STATEEEEEEEE", state);
 
+  const getCompanyDetails = async () => {
+    try {
+      const { data } = await getCompany(id);
+      // console.log("RESPONSE COMPANY", data, data.data.data);
+      setCompany(data.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
-    const comp = companies.find((c) => c.id == id);
-    console.log(comp);
-    setCompany(comp);
+    getCompanyDetails();
   }, [id]);
+
   const acceptClick = () => {
     setOpenConfModal(true);
     setConfirmationData({
@@ -44,13 +53,32 @@ const CompanyDetailsPageUser = () => {
     });
   };
 
-  const handleAcceptRequest = () => {
-    console.log("ACCEPT REQUEST");
-    setOpenConfModal(false);
+  // Accept Request
+  const handleAcceptRequest = async () => {
+    console.log("ACEEEEETTTTT");
+    try {
+      const { data } = await POST(`/user/approveFriendRequest`, {
+        id: state.id,
+      });
+      console.log("DATAAAAAAAAAA", data.data.data);
+      navigate("/company/friend-requests");
+      // setCompanies(data?.data?.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
-  const handleDeclineRequest = () => {
-    console.log("DECLINE REQUEST");
-    setOpenConfModal(false);
+  // Accept Request
+  const handleRejectRequest = async () => {
+    console.log("Declineeeee");
+    try {
+      const { data } = await POST(`/user/denyFriendRequest`, {
+        id: state.id,
+      });
+      navigate("/company/friend-requests");
+      console.log("DATAAAAAAAAAA", data.data.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -58,7 +86,7 @@ const CompanyDetailsPageUser = () => {
       <div className="maxW py-3">
         <div className="">
           <div className="flex justify-between mt-2">
-            <p className="text-3xl font-medium">{company.companyName}</p>
+            <p className="text-3xl font-medium">{company?.companyName}</p>
             <div className="flex gap-x-5">
               {state?.type !== "AddFriend" ? (
                 <>
@@ -82,23 +110,35 @@ const CompanyDetailsPageUser = () => {
               )}
             </div>
           </div>
-          <p className="text-base mt-5 text-neutral2">
-            {company.companyDescription}
-          </p>
+          <p className="text-base mt-5 text-neutral2">{company?.description}</p>
+        </div>
+        <div className="mt-4">
+          <p className="text-xl font-medium">Categories</p>
+          <div className="flex mt-2">
+            <p className="text-base text-neutral2">
+              {company?.categories?.slice(" ").join(", ")}
+            </p>
+          </div>
         </div>
         <div className="mt-4">
           <p className="text-xl font-medium underline">Documentation</p>
           <div className="flex mt-2 gap-x-5 items-center">
             <p className="text-base ">License Copy : </p>
             <div
-              onClick={() => setOpenPdfModal(true)}
+              onClick={() => {
+                setPdfFile(company?.licensePdf?.filename);
+                setOpenPdfModal(true);
+              }}
               className={`font-epilogue text-white bg-[#4640DE] rounded-md hover:brightness-125 cursor-pointer py-1 px-2 h-fit`}
             >
               <p className={` text-base`}>View License</p>
             </div>
             <p className="text-base">VAC Certificate : </p>
             <div
-              onClick={() => setOpenPdfModal(true)}
+              onClick={() => {
+                setPdfFile(company?.vacPdf?.filename);
+                setOpenPdfModal(true);
+              }}
               className={`font-epilogue text-white bg-[#4640DE] rounded-md hover:brightness-125 cursor-pointer py-1 px-2 h-fit`}
             >
               <p className={` text-base`}>View VAC</p>
@@ -111,34 +151,34 @@ const CompanyDetailsPageUser = () => {
             <p className="text-base">
               Phone #1 :{" "}
               <span className="text-primary hover:underline">
-                {company.telephone1}
+                {company?.telephone1}
               </span>
             </p>
             <p className="text-base">
               Phone #2 :{" "}
               <span className="text-primary hover:underline">
-                {company.telephone2}
+                {company?.telephone2}
               </span>
             </p>
             <p className="text-base">
               Fax Number :{" "}
               <span className="text-primary hover:underline">
-                {company.telephone2}
+                {company?.faxNumber}
               </span>
             </p>
             <p className="text-base">
               Email :{" "}
               <span className="text-primary hover:underline">
-                {company.emailAddress}
+                {company?.email}
               </span>
             </p>
             <p className="text-base">
               Website :{" "}
               <a
-                href={company.websiteAddress}
+                href={company?.website}
                 className="text-primary hover:underline"
               >
-                {company.websiteAddress}
+                {company?.website}
               </a>
             </p>
           </div>
@@ -149,25 +189,25 @@ const CompanyDetailsPageUser = () => {
             <p className="text-base">
               Address #1 :{" "}
               <span className="text-primary hover:underline">
-                {company.address1}
+                {company?.address1}
               </span>
             </p>
             <p className="text-base">
               Address #2 :{" "}
               <span className="text-primary hover:underline">
-                {company.address2}
+                {company?.address2}
               </span>
             </p>
             <p className="text-base">
               Address #3 :{" "}
               <span className="text-primary hover:underline">
-                {company.address3}
+                {company?.address3}
               </span>
             </p>
             <p className="text-base">
               Location :{" "}
               <span className="text-primary hover:underline">
-                {company.location}
+                {company?.location}
               </span>
             </p>
           </div>
@@ -178,14 +218,14 @@ const CompanyDetailsPageUser = () => {
           onConfirm={
             confirmationData.type === "accept"
               ? handleAcceptRequest
-              : handleDeclineRequest
+              : handleRejectRequest
           }
           handleClose={() => setOpenConfModal(false)}
           data={confirmationData}
         />
         <PdfComponent
           open={openPdfModal}
-          file={PdfFile}
+          file={pdfFile}
           handleClose={() => setOpenPdfModal(false)}
         />
       </div>

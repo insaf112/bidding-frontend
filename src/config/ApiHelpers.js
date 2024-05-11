@@ -6,5 +6,8 @@ const getCompany = async (id) => {
 const userLogin = async (user) => {
   return POST("/auth/login", { ...user });
 };
+const adminLogin = async (user) => {
+  return POST("/auth/loginAdmin", { ...user });
+};
 
-export { getCompany, userLogin };
+export { getCompany, userLogin, adminLogin };

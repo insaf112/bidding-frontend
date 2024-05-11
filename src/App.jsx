@@ -7,6 +7,7 @@ import SignupPage from "./Pages/SignupPage";
 
 import "./App.css";
 import MainRoutes from "./Routes/MainRoutes";
+import { toast } from "react-toastify";
 
 const App = () => {
   return (

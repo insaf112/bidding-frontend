@@ -6,6 +6,7 @@ import AppInput from "../Components/AppInput";
 import { POST } from "../config/ApiConfig";
 import { loginSuccess } from "../redux/slices/userSlice";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const [userInput, setUserInput] = useState({
@@ -36,12 +37,15 @@ const LoginPage = () => {
         } = await POST("/auth/login", { ...userInput });
         console.log("User Login", data.data.token);
         localStorage.setItem("token", data.data.token);
-        dispatch(loginSuccess());
-        setIsLoading(false);
+        dispatch(loginSuccess(data.data.user));
+        toast.success(data.message);
+
         navigate("/user/dashboard");
       } catch (err) {
-        alert(err);
+        console.log("User Login", err);
+        toast.warning(err?.response?.data?.error || "Error Logging In");
       }
+      setIsLoading(false);
     } else {
       alert("Please fill all the fields");
     }

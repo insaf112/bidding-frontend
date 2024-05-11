@@ -1,18 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CompanyDisplayBox from "../../Components/CompanyDisplayBox";
-import { companies, projects } from "../../assets/data/dummyData";
+import { companies } from "../../assets/data/dummyData";
 import { Link, useNavigate } from "react-router-dom";
 import CompanySmallDisplayBox from "../../Components/CompanySmallDisplayBox";
 import ProjectDisplayBox from "../../Components/ProjectDisplayBox";
+import { GET } from "../../config/ApiConfig";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const ProjectsActiveScreen = () => {
+  const { user } = useSelector((state) => state.user);
+  const [projects, setProjects] = useState([]);
+  console.log("USERRRRR", user);
+  const fetchAllCompanies = async () => {
+    try {
+      const { data } = await GET(
+        `/company/getAllProjects/${user?.companyProfile?._id}`
+      );
+      console.log("DATAAAAAAAAAA", data.data.data);
+      setProjects(data?.data?.data);
+      toast.success(data?.data?.message);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (user.companyProfile) {
+      fetchAllCompanies();
+    }
+  }, [user]);
+
   const navigate = useNavigate();
   return (
     <div className="w-full bg-neutral7 flex flex-col items-center pb-3">
       <div className="maxW">
         <div className="border-b-2 border-b-neutral5 py-3">
           <h1 className="text-[30px] mt-3 font-[500]">
-            Active Projects - {companies.length}
+            Active Projects - {projects.length}
           </h1>
           <div className="flex flex-wrap mt-4 gap-x-[2%]">
             {projects.length > 0 ? (
@@ -25,7 +50,7 @@ const ProjectsActiveScreen = () => {
               ))
             ) : (
               <p className="text-center text-neutral4 my-3">
-                No friend requests at the moment
+                No Projects at the moment
               </p>
             )}
           </div>

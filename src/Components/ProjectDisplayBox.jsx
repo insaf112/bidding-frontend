@@ -50,7 +50,7 @@ const ProjectDisplayBox = ({ item, onClick, type }) => {
       <p className="text-[15px] cursor-pointer text-neutral2">
         {item.telephone1}
       </p>
-      <p className="text-[16px] cursor-pointer mt-1">
+      <p className="text-[16px] cursor-pointer mt-1 w-full">
         {item.description.substring(0, 180)}...
       </p>
       <div className="flex justify-between">

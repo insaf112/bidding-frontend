@@ -7,34 +7,34 @@ import { loginSuccess } from "../../redux/slices/userSlice";
 
 const UserDashboardPage = () => {
   const { state } = useLocation();
-  const { user } = useSelector((state) => state.user);
+  const { user, isLoggedIn } = useSelector((state) => state.user);
   const [companyStatus, setCompanyStatus] = useState(null);
-  console.log("STATEEEEEEEE", state, user);
+  console.log("STATEEEEEEEE", isLoggedIn, user);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const getCompanyStatus = async () => {
-    if (user) {
-      try {
-        const { data } = await GET(`/user/getCompanyStatus/${user.id}`);
-        setCompanyStatus(data.data.data);
-        console.log("company STatus : ", data);
-      } catch (error) {
-        alert("Error", error);
-      }
+    try {
+      const { data } = await GET(`/user/getCompanyStatus/${user._id}`);
+      console.log("company STatus : ", data);
+      setCompanyStatus(data.data.data);
+    } catch (error) {
+      alert("Error", error);
     }
   };
 
   useEffect(() => {
-    getCompanyStatus();
+    if (isLoggedIn) {
+      getCompanyStatus();
+    }
   }, []);
 
   const replaceUserToken = async () => {
     try {
-      const { data } = await GET(`/user/replaceToken/${user.id}`);
+      const { data } = await GET(`/user/replaceToken/${user._id}`);
       localStorage.setItem("token", data.data.data.token);
-      dispatch(loginSuccess());
+      dispatch(loginSuccess(data.data.data.user));
       console.log("DATAAAAAAAAAA : ", data);
       navigate("/company/dashboard");
     } catch (error) {

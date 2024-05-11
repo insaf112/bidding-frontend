@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import bgImage from "../../public/images/authPageBg.png";
 import AppInput from "../Components/AppInput";
 import { POST } from "../config/ApiConfig";
+import { toast } from "react-toastify";
 
 const SignupPage = () => {
   const [userInput, setUserInput] = useState({
@@ -33,6 +34,7 @@ const SignupPage = () => {
         const res = await POST("/auth/register", { ...userInput });
         console.log("User", res);
         setIsLoading(false);
+        toast.success(res?.data?.data);
         setTimeout(() => {
           navigate("/login");
         }, 2000);

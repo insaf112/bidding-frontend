@@ -25,10 +25,12 @@ const AppInputCompany = ({
   name,
   onChange,
   value,
+  fileType,
+  multiple = false,
   type = "text",
   ...others
 }) => {
-  const fileType = type == "file";
+  // const fileType = type == "file";
   const showLabel =
     type == "date" || type == "file" || type == "datetime-local";
   const styles = {
@@ -36,7 +38,7 @@ const AppInputCompany = ({
   };
   return (
     <div className="grid gap-y-1 my-auto" style={styles}>
-      <p className="text-base font-bold text-neutral2">{showLabel && label}</p>
+      <p className="text-base font-bold text-neutral2">{label}</p>
       <input
         style={{
           padding: fileType ? 1 : "12px 16px",
@@ -47,7 +49,8 @@ const AppInputCompany = ({
         name={name}
         value={value}
         onChange={onChange}
-        accept={fileType && "application/pdf"}
+        accept={fileType && fileType}
+        multiple={multiple && multiple}
         type={type}
         className="px-4 py-3 rounded-md outline-none w-[100%] text-base font-normal placeholder-neutral4 border border-[#D6DDEB] border-solid"
         placeholder={`Enter ${label}`}
@@ -55,14 +58,19 @@ const AppInputCompany = ({
     </div>
   );
 };
-const AppSelectOptions = ({ data, label }) => {
+const AppSelectOptions = ({ data, label, name, onChange }) => {
   return (
     <div className="grid gap-y-1 w-[48.3%] mt-1 ">
+      <p className="text-base font-bold text-neutral2">{label && label}</p>
       <select
+        onChange={onChange}
         id="countries"
+        name={name}
         className="px-4 py-3 rounded-md outline-none w-[100%] text-base font-normal placeholder-neutral4 border border-[#D6DDEB] border-solid"
       >
-        <option selected>{label}</option>
+        <option defaultValue={true} selected>
+          {label}
+        </option>
         {data.map((it, ind) => (
           <option key={ind} value={it.value}>
             {it.title}

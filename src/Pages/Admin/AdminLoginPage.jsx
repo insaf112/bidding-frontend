@@ -34,7 +34,7 @@ const LoginPage = () => {
         const { data } = await userLogin(userInput);
         console.log("User Login", data.data);
         localStorage.setItem("token", data.data.data.token);
-        dispatch(loginSuccess());
+        dispatch(loginSuccess(data.data.data.user));
         setIsLoading(false);
         navigate("/admin/dashboard");
       } catch (err) {

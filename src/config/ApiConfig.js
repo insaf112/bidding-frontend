@@ -1,7 +1,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const getToken = () => {
+export const getToken = () => {
   let token = localStorage.getItem("token");
   if (token) return token;
   else return null;
@@ -23,6 +23,7 @@ const axiosApi = axios.create({
 });
 
 const GET = (url, body, config = {}) => {
+  console.log("APIIIIIIIIIIIIIIIII GETTTTT", url, body, { ...config });
   return axiosApi.get(url, {
     ...config,
     headers: { authorization: "Bearer " + getToken() },

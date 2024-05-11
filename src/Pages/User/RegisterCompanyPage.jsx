@@ -3,6 +3,8 @@ import AppInput, { AppInputCompany } from "../../Components/AppInput";
 import { useNavigate } from "react-router-dom";
 import { POST, PostFile } from "../../config/ApiConfig";
 import { useSelector } from "react-redux";
+import DropdownSelect from "../../Components/DropdownSelect";
+import categories from "../../assets/data/categories";
 
 const RegisterCompanyPage = () => {
   const { user } = useSelector((store) => store.user);
@@ -23,6 +25,7 @@ const RegisterCompanyPage = () => {
     vacPdf: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const navigate = useNavigate();
   console.log("User", user);
 
@@ -50,7 +53,7 @@ const RegisterCompanyPage = () => {
       formData.append("vacPdf", company.vacPdf);
 
       // Append text input values to FormData object
-      formData.append("userId", user?.id);
+      formData.append("userId", user?._id);
       formData.append("companyName", company.companyName);
       formData.append("telephone1", company.telephone1);
       formData.append("telephone2", company.telephone2);
@@ -61,7 +64,7 @@ const RegisterCompanyPage = () => {
       formData.append("address2", company.address2);
       formData.append("address3", company.address3);
       formData.append("location", company.location);
-      ["Abc", "Def", "Ghi"].forEach((category, index) => {
+      selectedCategories.forEach((category, index) => {
         formData.append(`categories[${index}]`, category);
       });
       formData.append("website", company.website);
@@ -131,6 +134,7 @@ const RegisterCompanyPage = () => {
                 label={"License Copy (Pdf)"}
                 name={"licensePdf"}
                 onChange={onChangeInput}
+                fileType={"application/pdf"}
                 // value={company.licensePdf}
                 type="file"
               />
@@ -151,6 +155,17 @@ const RegisterCompanyPage = () => {
                   className="px-4 py-3 resize-none rounded-md outline-none w-[100%] text-base font-normal placeholder-neutral4 border border-[#D6DDEB] border-solid"
                 />
               </div>
+              <DropdownSelect
+                data={categories}
+                handleSelect={(value) => setSelectedCategories(value)}
+              />
+              <AppInputCompany
+                label={"Website Address"}
+                name={"website"}
+                onChange={onChangeInput}
+                value={company.website}
+                type="text"
+              />
               <AppInputCompany
                 label={"Address 1#"}
                 name={"address1"}
@@ -177,13 +192,6 @@ const RegisterCompanyPage = () => {
                 name={"location"}
                 onChange={onChangeInput}
                 value={company.location}
-                type="text"
-              />
-              <AppInputCompany
-                label={"Website Address"}
-                name={"website"}
-                onChange={onChangeInput}
-                value={company.website}
                 type="text"
               />
             </div>

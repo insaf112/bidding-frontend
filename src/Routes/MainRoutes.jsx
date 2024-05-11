@@ -22,7 +22,7 @@ import FriendRequestPage from "../Pages/Company/FriendRequestPage";
 import CompanyDetailsPage from "../Pages/Admin/CompanyDetailsPage";
 import CompanyDetailsPageUser from "../Pages/Company/CompanyDetailsPageUser";
 import ProjectDetailsPage from "../Pages/Company/ProjectDetailsPage";
-import { getDecodedToken } from "../config/ApiConfig";
+import { POST, getDecodedToken, getToken } from "../config/ApiConfig";
 import CompanyDashboardPage from "../Pages/Company/CompanyDashboardPage";
 import { loginSuccess } from "../redux/slices/userSlice";
 import { useDispatch } from "react-redux";
@@ -35,9 +35,20 @@ const userType = {
 const MainRoutes = () => {
   const isLoggedIn = getDecodedToken();
   const dispatch = useDispatch();
+  const token = getToken();
+  const verifyAuth = async () => {
+    try {
+      const { data } = await POST("/auth/verifyAuth", { token });
+      console.log("AUTHHHHHHHHHHHH : ");
+      dispatch(loginSuccess(data.data.data.user));
+    } catch (error) {
+      console.log("ERRORR AUTHHHH : ", error);
+    }
+  };
+
   useMemo(() => {
     if (isLoggedIn) {
-      dispatch(loginSuccess());
+      verifyAuth();
     }
   }, []);
   return (
@@ -92,12 +103,18 @@ const MainRoutes = () => {
             <Route path="user/dashboard" element={<UserDashboardPage />} />
           </Route>
 
-          {/* Mutual Routes Admin/User */}
-          <Route element={<AuthRoutes roles={[2, 0]} />}>
+          {/* Mutual Routes Admin/CompanyUser */}
+          <Route element={<AuthRoutes roles={[2, 1]} />}>
             <Route path="project-details" element={<ProjectDetailsPage />} />
             <Route path="active-projects" element={<ProjectsActiveScreen />} />
+            {/* <Route path="register-company" element={<RegisterCompanyPage />} /> */}
+          </Route>
+
+          {/* Mutual Routes Admin/User */}
+          <Route element={<AuthRoutes roles={[2, 0]} />}>
             <Route path="register-company" element={<RegisterCompanyPage />} />
           </Route>
+
           {/* Catch All (Not Found) */}
           <Route path="*" element={<NotFoundPage />} />
         </Route>
