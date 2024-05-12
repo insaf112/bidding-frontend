@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import bgImage from "/images/authPageBg.png";
 import AppInput from "../../Components/AppInput";
-import { userLogin } from "../../config/ApiHelpers";
+import { adminLogin } from "../../config/ApiHelpers";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/slices/userSlice";
 
@@ -31,7 +31,7 @@ const LoginPage = () => {
     if (!isLoading && email && password) {
       setIsLoading(true);
       try {
-        const { data } = await userLogin(userInput);
+        const { data } = await adminLogin(userInput);
         console.log("User Login", data.data);
         localStorage.setItem("token", data.data.data.token);
         dispatch(loginSuccess(data.data.data.user));
